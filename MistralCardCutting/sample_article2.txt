@@ -1,14 +1,3 @@
-from newspaper import Article
-
-url = 'https://www.bbc.com/news/articles/cn93e12rypgo'
-article = Article(url)
-article.download()
-
-article.parse()
-
-print(article.text.strip("\n\n"))
-
-f"""
 What are tariffs and why is Trump using them?
 4 days ago Share Save Jennifer Clarke BBC News Share Save
 Watch: What is a tariff? The BBC's Adam Fleming explains
@@ -37,4 +26,4 @@ The UK exported around £58bn of goods to the US in 2024, mainly cars, machinery
 Following the announcement of tariffs, carmaker Jaguar Land Rover said it would "pause" all shipments to the US as it worked to "address the new trading terms". Economists have warned US tariffs could knock the UK's economy off course and make it harder for the government to hit its borrowing rules. How the prime minister might tackle impact of Trump tariffs
 How exposed is the UK to Trump's tariff chaos?
 How have other countries responded to Trump's decision to pause the tariffs?
-For countries on Donald Trump's so-called "worst offenders" list, there was a sigh of relief when tariffs were temporarily downgraded to 10%. But the impact of the lower rate remains a serious concern for them. The European Union is among those seeking a trade deal with the US during this 90-day higher tariff pause. The bloc is also "developing retaliatory measures" in case talks fail, EU chief Ursula von der Leyen has said. Poland's Prime Minister Donald Tusk urged all parties to "make the best" of the 90 day pause, stressing that maintaining strong relations with the US "is a common responsibility of Europeans and Americans". Germany's incoming Chancellor Friedrich Merz said the pause proves a united European approach to trade has a positive effect, adding: "Europeans are determined to defend ourselves". Vietnam's Deputy Prime Minister Ho Duc Phoc said the US and Vietnam expect to start "negotiations on a bilateral trade agreement", which "would include tariff agreements". Canada, which has been targeted by tariffs above 10%, introduced a 25% tariff on some vehicles from the US on 9 April. See the Trump tariffs list by country"""
+For countries on Donald Trump's so-called "worst offenders" list, there was a sigh of relief when tariffs were temporarily downgraded to 10%. But the impact of the lower rate remains a serious concern for them. The European Union is among those seeking a trade deal with the US during this 90-day higher tariff pause. The bloc is also "developing retaliatory measures" in case talks fail, EU chief Ursula von der Leyen has said. Poland's Prime Minister Donald Tusk urged all parties to "make the best" of the 90 day pause, stressing that maintaining strong relations with the US "is a common responsibility of Europeans and Americans". Germany's incoming Chancellor Friedrich Merz said the pause proves a united European approach to trade has a positive effect, adding: "Europeans are determined to defend ourselves". Vietnam's Deputy Prime Minister Ho Duc Phoc said the US and Vietnam expect to start "negotiations on a bilateral trade agreement", which "would include tariff agreements". Canada, which has been targeted by tariffs above 10%, introduced a 25% tariff on some vehicles from the US on 9 April. See the Trump tariffs list by country

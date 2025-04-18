@@ -40,10 +40,10 @@ def display_card(citation, highlighted_text):
 
 if __name__ == "__main__":
     # ⬇️ Sample input (replace with article text from Step 1)
-    sample_text = open(rf"C:\Users\ishpe\PycharmProjects\MISC_PROJECTS\Cardify.Cut\MistralCardCutting\sample_article.txt", encoding="utf-8").read()
+    sample_text = open(rf"C:\Users\ishpe\PycharmProjects\MISC_PROJECTS\Cardify.Cut\MistralCardCutting\sample_article2.txt", encoding="utf-8").read()
     print(sample_text)
     # ⬇️ What argument are you trying to support?
-    argument = "marijuana legalized"
+    argument = "trump's tariffs are bad"
 
     # ⬇️ Manually set citation for now
     citation = "Jarrod Tudor — Compulsory Licensing in the European Union — George Mason Journal of International Commercial Law — 2012"
@@ -56,4 +56,4 @@ if __name__ == "__main__":
         output_sentences.append([highlighted])
         display_card(citation, highlighted)
 
-    for i, o in enumerate(output_sentences): print(o)
+    for i, o in enumerate(output_sentences): print(str(o) + ",")
