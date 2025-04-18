@@ -1,6 +1,6 @@
 import re
 import pyperclip
-from jupyter_core.version import pattern
+import string
 
 mistral_output = [
 [' NOTHING\n\n'],
@@ -99,7 +99,7 @@ for i, (highlighted_text, article_sentence) in enumerate(zip(mistral_output, sam
                     print("replacing->", word.lower(), mistral_word.lower())
                     # article_sentence = article_sentence.replace(mistral_word, f"{BOLD}{BLUE}{mistral_word}{END}")
                     # article_sentence = article_sentence.replace(mistral_word, f"B{mistral_word}E")
-                    pattern = rf"\b{re.escape(mistral_word)}"
+                    pattern = rf"\b{re.escape(mistral_word).translate(str.maketrans('', '', string.punctuation))}\b"
                     replacement = r"{\b\ul\cf1 " + mistral_word + r"}"
 
                     article_sentence = re.sub(pattern, f"{BLUE}{BOLD}{mistral_word}{END}", article_sentence,
