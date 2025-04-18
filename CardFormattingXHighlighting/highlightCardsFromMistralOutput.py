@@ -1,6 +1,14 @@
-import re
-import pyperclip
-import string
+import win32clipboard as wc
+import win32con
+from searchAndHighlight import highlight_extracted_words
+
+def copy_rtf_to_clipboard(rtf_text):
+    wc.OpenClipboard()
+    wc.EmptyClipboard()
+    wc.SetClipboardData(win32con.CF_TEXT, rtf_text.encode('windows-1252'))  # Optional plain-text fallback
+    wc.SetClipboardData(wc.RegisterClipboardFormat("Rich Text Format"), rtf_text.encode('windows-1252'))
+    wc.CloseClipboard()
+
 
 mistral_output = [
 [' NOTHING\n\n'],
@@ -35,11 +43,6 @@ mistral_output = [
 [' The following sentence(s) in your article support your argument: "Marijuana has been legalized for recreational use in a number of states."\n\n']
     ]
 
-# ANSI escape codes
-BLUE = '\033[94m'
-BOLD = '\033[1m'
-END = '\033[0m'
-
 sample_text = f"""WASHINGTON (CNN) — Not everyone subscribes to a New Year’s resolution, but Americans will be required to follow new laws in 2014.
 Some 40,000 measures taking effect range from sweeping, national mandates under Obamacare to marijuana legalization in Colorado, drone prohibition in Illinois and transgender protections in California.
 Although many new laws are controversial, they made it through legislatures, public referendum or city councils and represent the shifting composition of American beliefs.
@@ -71,41 +74,35 @@ Oregon: Employers and schools can’t require a job or student applicant to prov
 Colorado: Marijuana becomes legal in the state for buyers over 21 at a licensed retail dispensary.
 (Sourcing: much of this list was obtained from the National Conference of State Legislatures)."""
 
-formatted_evidence=""
-
 # ========================
 # BUILDING THE RTF OUTPUT
 # ========================
-formatted_rtf = r"""{\rtf1\ansi\deff0{\colortbl ;\red0\green112\blue192;}"""  # light blue
+# Use this for RTF highlight
+begin = r"{\highlight1\b\ul "
+end = r"}"
 
-for i, (highlighted_text, article_sentence) in enumerate(zip(mistral_output, sample_text.split("\n"))): #iterate through each sentence in sample text
+# RTF header and footer
+rtf_header = r"""{\rtf1\ansi\deff0{\colortbl ;\red204\green255\blue255;}"""  # Light blue highlight
+rtf_footer = "}"
+
+# Process
+formatted_rtf_body = ""
+
+for i, (extracted_text, article_sentence) in enumerate(zip(mistral_output, sample_text.split("\n"))): #iterate through each sentence in sample text
     # Remove formatting from article_sentence
-    highlighted_text = highlighted_text[0].replace("\"", "");
-
-    if highlighted_text.startswith("NOTHING") or not highlighted_text:
-        formatted_rtf += article_sentence + r"\line "
-        continue
-
+    extracted_text = extracted_text[0].replace("\"", "");
+    highlighted_phrase = article_sentence
     print(i, article_sentence)
-    print(highlighted_text.split()[0])
-    if "NOTHING" not in highlighted_text.split()[0]:   # check if we can skip if phrase starts with "NOTHING"
-        # Go sequentially through each word in mistral output. If that word is in sample_text, highlight it. This is how we weed out the faulty outputs that write summaries and only get the verbatim phrases
-        print("*"*80)
-        for mistral_word in highlighted_text.split():
-            print(mistral_word + " | " + article_sentence)
-            b = False
-            for word in article_sentence.split():
-                if word.lower() == mistral_word.lower() and not b:
-                    print("replacing->", word.lower(), mistral_word.lower())
-                    # article_sentence = article_sentence.replace(mistral_word, f"{BOLD}{BLUE}{mistral_word}{END}")
-                    # article_sentence = article_sentence.replace(mistral_word, f"B{mistral_word}E")
-                    pattern = rf"\b{re.escape(mistral_word).translate(str.maketrans('', '', string.punctuation))}\b"
-                    replacement = r"{\b\ul\cf1 " + mistral_word + r"}"
+    print(extracted_text.split()[0])
+    if "NOTHING" not in extracted_text.split()[0]:   # check if we can skip if phrase starts with "NOTHING"
+        # get the output and add to formatted_evidence
+        highlighted_phrase = highlight_extracted_words(article_sentence, extracted_text, beginning_marker=begin, ending_marker=end)
 
-                    article_sentence = re.sub(pattern, f"{BLUE}{BOLD}{mistral_word}{END}", article_sentence,
-                                              flags=re.IGNORECASE)
-                    b = True
+    formatted_rtf_body += highlighted_phrase + r"\line "
 
-    formatted_evidence+=article_sentence + "\n"
+rtf_body = formatted_rtf_body + r"\line "
+full_rtf = rtf_header + formatted_rtf_body + rtf_footer
+copy_rtf_to_clipboard(full_rtf)
 
-print("=="*50 + "\n\n" + formatted_evidence)
+print("=="*50 + "\n\n" + formatted_rtf_body)
+print(full_rtf)
